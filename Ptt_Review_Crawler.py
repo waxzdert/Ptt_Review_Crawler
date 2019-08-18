@@ -78,7 +78,7 @@ def main():
     
     print('總共要處理 %d 篇文章\n' %(len(topic_list)))
 
-    print('===========================================\n')
+
     for i in range(len(topic_list)):
         temp = get_content(topic_list[i])
         all_reviews_list = all_reviews_list + temp
@@ -87,7 +87,7 @@ def main():
         sys.stdout.flush()
 
     print('\n')
-    print('===========================================\n')  
+
 
     Save2Excel(all_reviews_list)
 
