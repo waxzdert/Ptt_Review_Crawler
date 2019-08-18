@@ -52,8 +52,8 @@ def Save2Excel(posts):
         '留言': contents
         })
     
-    #output_name = input('請輸入輸出檔名\n')
-    output_name = '123'
+    output_name = input('請輸入輸出檔名\n')
+    #output_name = '123'
     final_name = output_name + '.xlsx'
     
     df.to_excel(final_name, sheet_name='sheet1', index=False, columns=['發文周','日期','時間','Series','主題','id','留言',
@@ -81,3 +81,5 @@ def main():
         all_reviews_list = all_reviews_list + temp
         
     Save2Excel(all_reviews_list)
+
+main()
