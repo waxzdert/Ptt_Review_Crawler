@@ -5,7 +5,7 @@ import re
 from pprint import pprint
 import codecs
 from pandas import DataFrame
-from datetime import datetime
+import datetime
 import sys
 
 def get_content(url):
@@ -18,16 +18,30 @@ def get_content(url):
 
     cln = re.compile(r'\n| |\xa0|\\xa0|\u3000|\\u3000|\\u0020|\u0020|\t|\r')
 
+    Main_post_week = bs.find_all('span', class_='article-meta-value')[3].get_text()[4:10]
+    main_week_num = datetime.datetime.strptime('2019'+Main_post_week, '%Y%b %d').date().isocalendar()[1]
+
+
     for pushes in bs.find_all('div',class_="push"):
             #resDict['pushTag']=pushes.span.get_text()
-            id=pushes.find('span',class_='f3 hl push-userid').get_text()
-            review=pushes.find('span',class_='f3 push-content').get_text()[2:]
-            date=cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[0:6])
-            time=cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[6:12])
-            
+             
+            id = pushes.find('span',class_='f3 hl push-userid').get_text()
+            review = pushes.find('span',class_='f3 push-content').get_text()[2:]
+            date = datetime.datetime.strptime(('2019/'+ (cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[0:6]))), '%Y/%m/%d')
+            time = datetime.datetime.strptime((cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[6:12])), '%H:%M')
+            post_week_num = date.date().isocalendar()[1]
+
+            print(main_week_num)
+            print(post_week_num)
+
+            if(main_week_num < post_week_num):
+                post_week = ''
+            else:
+                post_week = 'V'
             resList.append({
-                'date':datetime.strptime(('2019/'+date), '%Y/%m/%d'),
-                'time':datetime.strptime(time, '%H:%M'),
+                'post_week':post_week,
+                'date':date,
+                'time':time,
                 'topic':topic,
                 'review':review,
                 'id':id,
@@ -37,6 +51,7 @@ def get_content(url):
     return resList
 
 def Save2Excel(posts):
+    post_week = [entry['post_week'] for entry in posts] 
     topics = [entry['topic'] for entry in posts]
     links = [entry['url'] for entry in posts]
     dates = [entry['date'] for entry in posts]
@@ -44,6 +59,7 @@ def Save2Excel(posts):
     authors = [entry['id'] for entry in posts]
     contents = [entry['review'] for entry in posts]
     df = DataFrame({
+        '發文周':post_week,
         '主題':topics,
         'URL':links,
         '日期': dates,
@@ -87,7 +103,6 @@ def main():
         sys.stdout.flush()
 
     print('\n')
-
 
     Save2Excel(all_reviews_list)
 
