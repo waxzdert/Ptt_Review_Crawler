@@ -31,9 +31,6 @@ def get_content(url):
             time = datetime.datetime.strptime((cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[6:12])), '%H:%M')
             post_week_num = date.date().isocalendar()[1]
 
-            print(main_week_num)
-            print(post_week_num)
-
             if(main_week_num < post_week_num):
                 post_week = ''
             else:
