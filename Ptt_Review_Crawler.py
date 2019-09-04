@@ -21,29 +21,30 @@ def get_content(url):
     Main_post_week = bs.find_all('span', class_='article-meta-value')[3].get_text()[4:10]
     main_week_num = datetime.datetime.strptime('2019'+Main_post_week, '%Y%b %d').date().isocalendar()[1]
 
-
+    pushes = 0
     for pushes in bs.find_all('div',class_="push"):
             #resDict['pushTag']=pushes.span.get_text()
-             
-            id = pushes.find('span',class_='f3 hl push-userid').get_text()
-            review = pushes.find('span',class_='f3 push-content').get_text()[2:]
-            date = datetime.datetime.strptime(('2019/'+ (cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[0:6]))), '%Y/%m/%d')
-            time = datetime.datetime.strptime((cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[6:12])), '%H:%M')
-            post_week_num = date.date().isocalendar()[1]
 
-            if(main_week_num < post_week_num):
-                post_week = ''
-            else:
-                post_week = 'V'
-            resList.append({
-                'post_week':post_week,
-                'date':date,
-                'time':time,
-                'topic':topic,
-                'review':review,
-                'id':id,
-                'url':url
-            })
+        id = pushes.find('span',class_='f3 hl push-userid').get_text()
+        review = pushes.find('span',class_='f3 push-content').get_text()[2:]
+        date = datetime.datetime.strptime(('2019/'+ (cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[0:6]))), '%Y/%m/%d')
+        time = datetime.datetime.strptime((cln.sub('',pushes.find('span',class_='push-ipdatetime').get_text()[6:12])), '%H:%M')
+        post_week_num = date.date().isocalendar()[1]
+
+        if(main_week_num < post_week_num):
+            post_week = ''
+        else:
+            post_week = 'V'
+        resList.append({
+            'post_week':post_week,
+            'date':date,
+            'time':time,
+            'topic':topic,
+            'review':review,
+            'id':id,
+            'url':url
+        })
+
 
     return resList
 
